@@ -23,7 +23,7 @@
 ## Controller code in Node.js
 
  API's business logic in Node.js.
- [controllers](./api/music.js)
+ [controllers](./api/controllers/music.js)
 
 ```js
 
