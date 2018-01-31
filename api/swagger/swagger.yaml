@@ -1,0 +1,133 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Music Api
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /artists:
+    # binds app logic to a route
+    x-swagger-router-controller: music
+    get:
+      description: Returns List of Artists to the caller
+      # used as the method name of the controller
+      operationId: getAllArtists
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ListArtistsResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create a artist"
+      operationId: createArtise
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: The Artist to create
+          schema:
+            $ref: "#/definitions/ArtistObject"
+      responses:
+        "201":
+          description: Created
+       # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /artist/{name}:
+    get:
+      description: "Get artist by name"
+      parameters:
+        - in: path
+          name: name   # Note the name is the same as in the path
+          type: string
+          required: true
+          description: The user ID.
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ArtistObject"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"    
+    put: 
+      description: "Update Artist"
+      consumes:
+        - application/json
+      parameters: 
+        - in: path
+          name: name   # Note the name is the same as in the path
+          type: string
+          required: true
+          description: The user ID.
+        - in: body 
+          required: true
+          name: user
+          description: Json The Artist to create
+          schema:
+            $ref: "#/definitions/ArtistObject"
+      responses:
+        "200":
+          description: Success
+       # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
+
+
+
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  ListArtistsResponse:      
+    properties:
+      # The array of movies
+      movies:
+        type: array
+        items: 
+          $ref: "#/definitions/ArtistObject"  
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ArtistObject: 
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        title:
+          type: string
